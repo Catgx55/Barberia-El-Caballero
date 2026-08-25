@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        // Generacion de pruebas ingresando datos de manera manual
         ServiceDAO serviceDAO = new ServiceDAO();
 
         System.out.println("=== 1. PRUEBA DE INSERCIÓN (CREATE) ===");
