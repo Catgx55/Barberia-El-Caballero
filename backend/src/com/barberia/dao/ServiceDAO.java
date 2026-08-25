@@ -31,7 +31,7 @@ public class ServiceDAO {
     // Read
     public List<Service> listar() {
         List<Service> servicios = new ArrayList<>();
-        String sql = "SELECT id, name description, price, durationMinutes, is_active FROM services";
+        String sql = "SELECT id, name,description, price, duration_Minutes,is_active FROM services";
 
         try (Connection conn = ConexionDB.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()){
             
@@ -54,7 +54,7 @@ public class ServiceDAO {
 
     // Update
     public boolean actualizar(Service servicio) {
-        String sql = "UPDATE services SET name = ?, price = ?, duration_minutes = ? WHERE id = ?";
+        String sql = "UPDATE services SET name = ?, description = ?, price = ?, duration_minutes = ? WHERE id = ?";
 
         try (Connection conn = ConexionDB.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql)){
             
