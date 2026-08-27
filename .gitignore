@@ -3,4 +3,8 @@
 *.war
 bin/
 target/
+.settings/
+.classpath
+.project
 .vscode/
+*.log
