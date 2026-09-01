@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +19,7 @@
 
             <%-- Mensaje de Error si la transación falla --%>
             <%
-                String error = (String) request.getAttribute("erro");
+                String error = (String) request.getAttribute("error");
                 if (error != null) {
             %>
                 <div class="alert-error">
@@ -34,11 +34,20 @@
 
             <form action="CitaServlet" method="post" class="form-reserva">
 
-                <!-- ID del cliente (Inyectado desde la sección o la selección) -->
+                <!-- Datos del cliente -->
                 <div class="form-group">
-                    <label for="clientId">ID Cliente:</label>
-                    <input type="number" name="clientId" id="clientId" required readonly">
-                    <small>Asignado automáticamente al cliente en sesión</small>
+                    <label for="nombre">Nombre Completo:</label>
+                    <input type="text" name="nombre" id="nombre" placeholder="Carlos Lopez" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo Electronico:</label>
+                    <input type="email" name="email" id="email" placeholder="ejemplo@correo.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono / Celular:</label>
+                    <input type="tel" name="telefono" id="telefono" placeholder="3001234567" required>
                 </div>
 
                 <!-- Seleccionar el Barbero -->
@@ -62,12 +71,6 @@
                     </select>
                 </div>
 
-                <!-- Precio del Servicio -->
-                 <div class="form-group">
-                    <label for="precio">Monto Total ($):</label>
-                    <input type="number" name="precio" id="precio" step="0.01" placeholder="50000.0" required>
-                 </div>
-
                  <!-- Fecha de la cita -->
                 <div class="form-group">
                     <label for="fecha">Fecha de la Cita:</label>
@@ -80,12 +83,7 @@
                     <input type="time" name="horaInicio" id="horaInicio" required>
                 </div>
 
-                <!-- Hora fin -->
-                <div class="form-group">
-                    <label for="horaFin">Hora de Finalización:</label>
-                    <input type="time" name="horaFin" id="horaFin" required>
-                </div>
-
+                <!-- Notas adicionales -->
                 <div class="form-group">
                     <label for="notas">Nota / Observaciones:</label>
                     <textarea name="notas" id="notas" rows="3" placeholder="Ej: Prefiero el corte con tijeras en los laterales"></textarea>

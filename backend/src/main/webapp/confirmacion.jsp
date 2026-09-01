@@ -2,7 +2,7 @@
 <!-- Importación del modelo Java Bean en JSP -->
  <%@ page import="com.barberia.model.Cita"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
         <h2>Resumen y confirmación de Cita</h2>
             <%
                 //Recuperacón del objeto JavaBean adjunto por el Servlet
-                Cita cita = (Cita) resquest.getAttribute("reservaCita");
+                Cita cita = (Cita) request.getAttribute("reservarCita");
                 if (cita != null) {
             %>
                 <div class="card-confirmacion">
@@ -25,7 +25,7 @@
 
                     <div class="card-body">
                         <ul>
-                            <li><strong>Cliente:</strong><%= cita.getClientName() != null ? cita.getClientName() : "ID: " + cita.getClientId %></li>
+                            <li><strong>Cliente:</strong><%= cita.getClientName() != null ? cita.getClientName() : "ID: " + cita.getClientId() %></li>
                             <li><strong>Barbero:</strong><%= cita.getBarberName() != null ? cita.getBarberName() : "ID: " + cita.getBarberId() %></li>
                             <li><strong>Servicio:</strong><%= cita.getServiceName() != null ? cita.getServiceName() : "Servicio General" %></li>
                             <li><strong>Fecha:</strong><%= cita.getAppointmentDate() %></li>

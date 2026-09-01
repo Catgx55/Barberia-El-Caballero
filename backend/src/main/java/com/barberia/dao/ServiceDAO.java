@@ -8,8 +8,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceDAO {
+
+    // obtener un servicio por su id
+    public Service obtenerPorId(Long id) {
+        String sql = "SELECT id, name, description, price, duration_minutes, is_active FROM services WHERE id = ?";
+        Service service = null;
+
+        try(Connection conn = ConexionDB.obtenerConexion();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
+
+                stmt.setLong(1, id);
+                try(ResultSet rs = stmt.executeQuery()) {
+                    if(rs.next()) {
+                        service = new Service();
+                        service.setId(rs.getLong("id"));
+                        service.setName(rs.getString("name"));
+                        service.setDescription(rs.getString("description"));
+                        service.setPrice(rs.getBigDecimal("price"));
+                        service.setDurationMinutes(rs.getInt("duration_minutes"));
+                        service.setIsActive(rs.getBoolean("is_active"));
+                    }
+                }
+        }catch(SQLException e) {
+            System.err.println("Error en ServiceDAO.obtenerPorId: ");
+            e.printStackTrace();
+        }
+        return service;
+    }
     
-    // Create
+    /* Create
     public boolean crear(Service servicio) {
         String sql = "INSERT INTO services (name, description, price, duration_minutes, is_active) VALUES (?, ?, ?, ?, ?)";
 
@@ -26,14 +53,16 @@ public class ServiceDAO {
             System.err.println("Error al insertar servicio: " + e.getMessage());
             return false;
         }
-    }
+    } */
 
     // Read
-    public List<Service> listar() {
+    public List<Service> listarActivos() {
         List<Service> servicios = new ArrayList<>();
-        String sql = "SELECT id, name,description, price, duration_Minutes,is_active FROM services";
+        String sql = "SELECT id, name, description, price, duration_Minutes, is_active FROM services WHERE is_active = true";
 
-        try (Connection conn = ConexionDB.obtenerConexion(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()){
+        try (Connection conn = ConexionDB.obtenerConexion(); 
+            PreparedStatement stmt = conn.prepareStatement(sql); 
+            ResultSet rs = stmt.executeQuery()){
             
             while (rs.next()) {
                 Service service = new Service();
@@ -47,12 +76,12 @@ public class ServiceDAO {
                 servicios.add(service);
             }
         } catch (SQLException e) {
-            System.err.println("Error al consultar servicios: " + e.getMessage());
+            System.err.println("Error en ServiceDAO.listarActivos: " + e.getMessage());
         }
         return servicios;
     }
 
-    // Update
+    /*  Update
     public boolean actualizar(Service servicio) {
         String sql = "UPDATE services SET name = ?, description = ?, price = ?, duration_minutes = ? WHERE id = ?";
 
@@ -83,5 +112,5 @@ public class ServiceDAO {
             System.err.println("Error al eliminar un servicio: " + e.getMessage());
             return false;
         }
-    }
+    } */
 }
