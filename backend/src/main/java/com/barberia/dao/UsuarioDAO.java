@@ -8,7 +8,7 @@ public class UsuarioDAO {
     //Busca un cliente por su correo o lo registra si no existe
     public Long obtenerOCrearCliente(String nombre, String email, String telefono) {
         String sqlSelect = "SELECT id FROM users WHERE email = ?";
-        String sqlInsert = "INSERT INTO users (first_name, last_name, email, phone, password, role_id) VALUES (?, '', ?, ?, '123456', 1)";
+        String sqlInsert = "INSERT INTO users (first_name, last_name, email, phone, password, role_id) VALUES (?, ?, ?, ?, '123456', 1)";
 
         try(Connection conn = ConexionDB.obtenerConexion()) {
             if(conn == null) return null;
@@ -23,11 +23,21 @@ public class UsuarioDAO {
                 }
             }
 
+            // Separar nombres y apellidos
+            String firstName = nombre;
+            String lastName = "";
+            if(nombre != null && nombre.trim().contains(" ")) {
+                int indexSpace = nombre.trim().indexOf(" ");
+                firstName = nombre.trim().substring(0, indexSpace);
+                lastName = nombre.trim().substring(indexSpace + 1);
+            }
+
             // registrar si no existe
             try(PreparedStatement psIns = conn.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS)) {
-                psIns.setString(1, nombre);
-                psIns.setString(2, email);
-                psIns.setString(3, telefono);
+                psIns.setString(1, firstName);
+                psIns.setString(2, lastName);
+                psIns.setString(3, email);
+                psIns.setString(4, telefono);
 
                 int affectedRows = psIns.executeUpdate();
                 if(affectedRows > 0) {

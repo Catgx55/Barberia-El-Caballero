@@ -1,5 +1,6 @@
 package com.barberia.controller;
 
+import com.barberia.dao.BarberoDAO;
 import com.barberia.dao.CitaDAO;
 import com.barberia.dao.ServiceDAO;
 import com.barberia.dao.UsuarioDAO;
@@ -21,6 +22,7 @@ public class CitaServlet extends HttpServlet {
     private CitaDAO citaDAO;
     private UsuarioDAO usuarioDAO;
     private ServiceDAO serviceDAO;
+    private BarberoDAO barberoDAO;
 
     @Override
     public void init() throws ServletException {
@@ -28,6 +30,7 @@ public class CitaServlet extends HttpServlet {
         citaDAO = new CitaDAO();
         usuarioDAO = new UsuarioDAO();
         serviceDAO = new ServiceDAO();
+        barberoDAO = new BarberoDAO();
     }
 
     // Metodo GET
@@ -54,7 +57,9 @@ public class CitaServlet extends HttpServlet {
                 request.getRequestDispatcher("reservar-cita.jsp").forward(request, response);
             }
         } else {
-            response.sendRedirect("reservar-cita.jsp");
+            request.setAttribute("listaServicios", serviceDAO.listarActivos());
+            request.setAttribute("listaBarberos", barberoDAO.listarActivos());
+            request.getRequestDispatcher("reservar-cita.jsp").forward(request, response);
         }
     }
 
@@ -71,11 +76,12 @@ public class CitaServlet extends HttpServlet {
             String emailCliente = request.getParameter("email");
             String telefonoCliente = request.getParameter("telefono");
 
+            // crear u obtener cliente
             Long clientId = usuarioDAO.obtenerOCrearCliente(nombreCliente, emailCliente, telefonoCliente);
 
             if(clientId == null) {
                 request.setAttribute("error", "No se pudo registrar la información del cliente.");
-                request.getRequestDispatcher("reservar-cita.jsp").forward(request, response);
+                refrescarYRedirigirFormulario(request, response);
                 return;
             }
 
@@ -91,7 +97,7 @@ public class CitaServlet extends HttpServlet {
             Service servicio = serviceDAO.obtenerPorId(serviceId);
             if(servicio == null) {
                 request.setAttribute("error", "El servicio seleccionado no existe.");
-                request.getRequestDispatcher("reservar-cita.jsp").forward(request, response);
+                refrescarYRedirigirFormulario(request, response);
                 return;
             }
 
@@ -119,13 +125,19 @@ public class CitaServlet extends HttpServlet {
                 request.getRequestDispatcher("confirmacion.jsp").forward(request, response);
             } else {
                 request.setAttribute("error", "Error al procesar la reserva en la base de datos");
-                request.getRequestDispatcher("reservar-cita.jsp").forward(request, response);
+                refrescarYRedirigirFormulario(request, response);
             }
         } catch (Exception e) {
             System.err.println("Error en CitasServlet POST: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("error", "Error al procesar la reserva: " + e.getMessage());
-            request.getRequestDispatcher("reservar-cita.jsp").forward(request, response);
+            refrescarYRedirigirFormulario(request, response);
         }
+    }
+
+    private void refrescarYRedirigirFormulario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("listaServicios", serviceDAO.listarActivos());
+        request.setAttribute("listaBarberos", barberoDAO.listarActivos());
+        request.getRequestDispatcher("reservar-cita.jsp").forward(request, response);
     }
 }

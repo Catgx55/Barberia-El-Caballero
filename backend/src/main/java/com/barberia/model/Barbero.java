@@ -41,5 +41,5 @@ public class Barbero {
         if (fullName != null) return fullName;
         return (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "");
     }
-    public void setId(String fullName) { this.fullName = fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 }
